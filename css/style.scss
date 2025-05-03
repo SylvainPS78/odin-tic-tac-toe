@@ -25,6 +25,11 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &.spot--filled {
+      pointer-events: none;
+      opacity: 0.7;
+    }
   }
 
   &__svg {

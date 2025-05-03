@@ -44,22 +44,60 @@ const gameController = (() => {
 
   const getUserinput = () => {
     return new Promise((resolve) => {
-      let input = prompt(` ${currentPlayer.name} entrez un chiffre (1-9):`);
-      let index = parseInt(input) - 1;
+      const containerSpot = document.querySelectorAll(".container__spot");
 
-      if (isNaN(index) || index < 0 || index > 8) {
-        alert("Entrée invalide. Veuillez entrer un nombre entre 1 et 9.");
-        resolve(getUserinput());
-        return;
-      }
+      const handleClick = (event) => {
+        const spot = event.target.closest(".container__spot");
+        if (!spot) return;
 
-      if (gameboard.updateBoard(index, currentPlayer.symbol)) {
-        resolve();
-      } else {
-        alert("Cet emplacement est déjà pris");
-        resolve(getUserinput());
-      }
+        const index = parseInt(spot.dataset.index);
+        if (gameboard.updateBoard(index, currentPlayer.symbol)) {
+          renderSymbol(spot, currentPlayer.symbol);
+          spot.classList.add("spot--filled");
+          containerSpot.forEach((s) =>
+            s.removeEventListener("click", handleClick)
+          );
+          resolve();
+        } else {
+          alert("Cet emplacement est déjà pris");
+        }
+      };
+
+      containerSpot.forEach((spot) => {
+        spot.addEventListener("click", handleClick);
+      });
     });
+  };
+
+  const renderSymbol = (spotElement, symbol) => {
+    spotElement.innerHTML =
+      symbol === "X"
+        ? `<svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#1f1f1f"
+          class="container__svg"
+  
+        >
+          <path
+            d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+          />
+        </svg>`
+        : `        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          height="24px"
+          viewBox="0 -960 960 960"
+          width="24px"
+          fill="#1f1f1f"
+          class="container__svg"
+  
+        >
+          <path
+            d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
+          />
+        </svg>`;
   };
 
   const checkWinner = () => {
@@ -92,6 +130,7 @@ const gameController = (() => {
 
   const switchPlayer = () => {
     currentPlayer = currentPlayer === player1 ? player2 : player1;
+    displayPlayerSymbol();
   };
 
   const playRound = async () => {
@@ -112,14 +151,75 @@ const gameController = (() => {
     switchPlayer();
   };
 
+  const displayPlayerSymbol = () => {
+    const containerSpot = document.querySelectorAll(".container__spot");
+
+    const handleMouseEnter = (event) => {
+      const spot = event.target;
+
+      if (
+        gameActive &&
+        !spot.classList.contains("spot--filled") &&
+        !spot.querySelector("svg")
+      ) {
+        const symbolToShow = currentPlayer === player1 ? "X" : "O";
+        spot.dataset.hoverSymbol = symbolToShow;
+        spot.innerHTML =
+          symbolToShow === "X"
+            ? `<svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#1f1f1f"
+            class="container__svg"
+            style="opacity: 0.5;"
+          >
+            <path
+              d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"
+            />
+          </svg>`
+            : ` <svg
+            xmlns="http://www.w3.org/2000/svg"
+            height="24px"
+            viewBox="0 -960 960 960"
+            width="24px"
+            fill="#1f1f1f"
+            class="container__svg"
+            style="opacity: 0.5;"
+          >
+            <path
+              d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
+            />
+          </svg>`;
+      }
+    };
+    const handleMouseLeave = (event) => {
+      const spot = event.target;
+      if (spot.dataset.hoverSymbol) {
+        spot.innerHTML = "";
+        delete spot.dataset.hoverSymbol;
+      }
+    };
+
+    containerSpot.forEach((spot) => {
+      spot.addEventListener("mouseenter", handleMouseEnter);
+      spot.addEventListener("mouseleave", handleMouseLeave);
+    });
+  };
+
   const startGame = async () => {
     init();
+    displayPlayerSymbol();
     while (gameActive) {
       await playRound();
     }
+    alert(
+      `Game Over! Final Score: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`
+    );
   };
 
   return { startGame };
 })();
 
-//gameController.startGame();
+gameController.startGame();
