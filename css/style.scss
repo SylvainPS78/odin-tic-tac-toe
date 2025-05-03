@@ -4,8 +4,16 @@
   box-sizing: border-box;
 }
 
-main {
+body {
   height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10vh;
+}
+
+main {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,5 +46,42 @@ main {
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+}
+
+.footer {
+  width: min(50vh, 50vw);
+
+  &__container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    width: 100%;
+  }
+  &__button {
+    border: none;
+    padding: 1rem 2rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+  }
+}
+
+.button {
+  &--start {
+    background-color: rgb(0, 112, 0);
+    color: rgb(255, 255, 255);
+    &:hover {
+      background-color: lighten(rgb(4, 112, 0), 15%);
+    }
+  }
+  &--reset {
+    background-color: rgb(112, 0, 0);
+    color: rgb(255, 255, 255);
+    &:hover {
+      background-color: lighten(rgb(112, 0, 0), 15%);
+    }
   }
 }
