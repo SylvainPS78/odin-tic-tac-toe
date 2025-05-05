@@ -19,13 +19,37 @@
         <div class="container__spot" data-index="7"></div>
         <div class="container__spot" data-index="8"></div>
       </div>
+      <dialog class="players__dialog">
+        <form class="players__form">
+          <label class="players__label" for="player1">Player 1 :</label>
+          <input
+            class="players__input"
+            type="text"
+            id="player1"
+            name="player1"
+            required
+          />
+          <label class="players__label" for="player2">Player 2 :</label>
+          <input
+            class="players__input"
+            type="text"
+            id="player2"
+            name="player2"
+            required
+          />
+          <button class="button--submit" type="submit">Submit</button>
+        </form>
+      </dialog>
     </main>
     <footer class="footer">
       <div class="footer__container">
-        <button class="footer__button button--reset" id="reset">Reset</button>
         <button class="footer__button button--start" id="start">Start</button>
       </div>
     </footer>
   </body>
   <script src="./js/script.js"></script>
 </html>
+
+<!--
+        <button class="footer__button button--reset" id="reset">Reset</button>
+-->

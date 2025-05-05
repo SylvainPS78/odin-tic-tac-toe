@@ -69,12 +69,27 @@ main {
   }
 }
 
+.players__dialog button {
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 1rem;
+}
+
 .button {
-  &--start {
+  &--start,
+  &--submit {
     background-color: rgb(0, 112, 0);
     color: rgb(255, 255, 255);
     &:hover {
       background-color: lighten(rgb(4, 112, 0), 15%);
+    }
+    &:disabled {
+      background-color: rgb(128, 128, 128);
+      cursor: not-allowed;
+      opacity: 0.7;
     }
   }
   &--reset {
@@ -83,5 +98,35 @@ main {
     &:hover {
       background-color: lighten(rgb(112, 0, 0), 15%);
     }
+  }
+}
+
+.players {
+  &__dialog {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 2rem;
+    border-radius: 0.5rem;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__label {
+    font-weight: bold;
+  }
+
+  &__input {
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5rem;
+    font-size: 1rem;
   }
 }

@@ -2,6 +2,11 @@ const gameboard = (() => {
   let board = [];
 
   const init = () => {
+    const containerSpot = document.querySelectorAll(".container__spot");
+    containerSpot.forEach((spot) => {
+      spot.innerHTML = "";
+      spot.classList.remove("spot--filled");
+    });
     board = Array(9).fill(null);
   };
 
@@ -35,11 +40,30 @@ const gameController = (() => {
   let gameActive = false;
 
   const init = () => {
-    player1 = playerFactory(prompt("Player 1, enter your name :"), "X");
-    player2 = playerFactory(prompt("Player 2, enter your name :"), "O");
-    currentPlayer = player1;
-    gameActive = true;
-    gameboard.init();
+    return new Promise((resolve) => {
+      const dialog = document.querySelector(".players__dialog");
+      const submitButton = document.querySelector(".button--submit");
+      const startButton = document.querySelector(".button--start");
+      startButton.disabled = true;
+      gameboard.init();
+      dialog.showModal();
+      submitButton.addEventListener("click", (event) => {
+        event.preventDefault();
+        const player1Name = document.getElementById("player1").value;
+        const player2Name = document.getElementById("player2").value;
+
+        if (player1Name && player2Name) {
+          player1 = playerFactory(player1Name, "X");
+          player2 = playerFactory(player2Name, "O");
+          dialog.close();
+          currentPlayer = player1;
+          gameActive = true;
+          resolve();
+        } else {
+          alert("Please enter both player names.");
+        }
+      });
+    });
   };
 
   const getUserinput = () => {
@@ -209,17 +233,23 @@ const gameController = (() => {
   };
 
   const startGame = async () => {
-    init();
+    await init();
     displayPlayerSymbol();
     while (gameActive) {
       await playRound();
     }
-    alert(
-      `Game Over! Final Score: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`
-    );
+    if (player1 && player2) {
+      alert(
+        `Game Over! Final Score: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`
+      );
+      document.querySelector(".button--start").disabled = false;
+    }
   };
 
   return { startGame };
 })();
 
-gameController.startGame();
+const startButton = document.querySelector(".button--start");
+startButton.addEventListener("click", () => {
+  gameController.startGame();
+});
