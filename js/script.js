@@ -41,12 +41,12 @@ const gameController = (() => {
 
   const init = () => {
     return new Promise((resolve) => {
-      const dialog = document.querySelector(".players__dialog");
+      const playerDialog = document.querySelector(".players__dialog");
       const submitButton = document.querySelector(".button--submit");
       const startButton = document.querySelector(".button--start");
       startButton.disabled = true;
       gameboard.init();
-      dialog.showModal();
+      playerDialog.showModal();
       submitButton.addEventListener("click", (event) => {
         event.preventDefault();
         const player1Name = document.getElementById("player1").value;
@@ -55,7 +55,7 @@ const gameController = (() => {
         if (player1Name && player2Name) {
           player1 = playerFactory(player1Name, "X");
           player2 = playerFactory(player2Name, "O");
-          dialog.close();
+          playerDialog.close();
           currentPlayer = player1;
           gameActive = true;
           resolve();
@@ -148,8 +148,22 @@ const gameController = (() => {
   };
 
   const displayWinner = () => {
-    alert(`Congratulation ${currentPlayer.name} you won this round !`);
+    const winnerDialog = document.querySelector(".winner__dialog");
+    const winnerText = document.querySelector(".winner__text");
+    const winnerScore = document.querySelector(".winner__score");
     currentPlayer.score++;
+    winnerText.textContent = `Congratulation ${currentPlayer.name} you won this round !`;
+    winnerScore.textContent = `Game Over! Final Score: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`;
+    winnerDialog.showModal();
+  };
+
+  const displayDraw = () => {
+    const winnerDialog = document.querySelector(".winner__dialog");
+    const winnerText = document.querySelector(".winner__text");
+    const winnerScore = document.querySelector(".winner__score");
+    winnerText.textContent = `It's a draw !`;
+    winnerScore.textContent = `Game Over! Final Score: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`;
+    winnerDialog.showModal();
   };
 
   const switchPlayer = () => {
@@ -167,7 +181,7 @@ const gameController = (() => {
     }
 
     if (gameboard.getBoard().every((cell) => cell !== null)) {
-      alert("It's a draw !");
+      displayDraw();
       gameActive = false;
       return;
     }
@@ -239,9 +253,6 @@ const gameController = (() => {
       await playRound();
     }
     if (player1 && player2) {
-      alert(
-        `Game Over! Final Score: ${player1.name}: ${player1.score}, ${player2.name}: ${player2.score}`
-      );
       document.querySelector(".button--start").disabled = false;
     }
   };

@@ -65,7 +65,8 @@ main {
   border-radius: 1rem;
 }
 
-.players__dialog button {
+.players__dialog button,
+.winner__dialog button {
   border: none;
   padding: 1rem 2rem;
   font-size: 1.5rem;
@@ -74,24 +75,27 @@ main {
   border-radius: 1rem;
 }
 
-.button--start, .button--submit {
+.button--start, .button--submit, .button--continue {
   background-color: rgb(0, 112, 0);
   color: rgb(255, 255, 255);
 }
-.button--start:hover, .button--submit:hover {
+.button--start:hover, .button--submit:hover, .button--continue:hover {
   background-color: #07bd00;
 }
-.button--start:disabled, .button--submit:disabled {
+.button--start:disabled, .button--submit:disabled, .button--continue:disabled {
   background-color: rgb(128, 128, 128);
   cursor: not-allowed;
   opacity: 0.7;
 }
-.button--reset {
+.button--end {
   background-color: rgb(112, 0, 0);
   color: rgb(255, 255, 255);
 }
-.button--reset:hover {
+.button--end:hover {
   background-color: #bd0000;
+}
+.button--continue {
+  margin-right: 1rem;
 }
 
 .players__dialog {
@@ -117,4 +121,23 @@ main {
   border: 1px solid #ccc;
   border-radius: 0.5rem;
   font-size: 1rem;
+}
+
+.winner__dialog {
+  text-align: center;
+  width: 60vw;
+  position: fixed;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+}
+.winner__text {
+  margin-bottom: 2rem;
+}
+.winner__container {
+  margin-bottom: 3rem;
 }/*# sourceMappingURL=style.css.map */
