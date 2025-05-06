@@ -10,14 +10,9 @@ const gameboard = (() => {
     board = Array(9).fill(null);
   };
 
-  const display = () => {
-    console.log(board);
-  };
-
   const updateBoard = (index, symbol) => {
     if (board[index] === null) {
       board[index] = symbol;
-      display();
       return true;
     }
     return false;
@@ -25,7 +20,7 @@ const gameboard = (() => {
 
   const getBoard = () => [...board];
 
-  return { init, display, updateBoard, getBoard };
+  return { init, updateBoard, getBoard };
 })();
 
 const playerFactory = (name, symbol) => {
@@ -82,8 +77,6 @@ const gameController = (() => {
             s.removeEventListener("click", handleClick)
           );
           resolve();
-        } else {
-          alert("Cet emplacement est déjà pris");
         }
       };
 
@@ -173,16 +166,20 @@ const gameController = (() => {
 
   const playRound = async () => {
     await getUserinput();
+    const endGameButton = document.querySelector(".button--end");
+    const continueGameButton = document.querySelector(".button--continue");
 
     if (checkWinner()) {
       displayWinner();
-      gameActive = false;
+      endGameButton.addEventListener("click", endGame);
+      continueGameButton.addEventListener("click", continueGame);
       return;
     }
 
     if (gameboard.getBoard().every((cell) => cell !== null)) {
       displayDraw();
-      gameActive = false;
+      endGameButton.addEventListener("click", endGame);
+      continueGameButton.addEventListener("click", continueGame);
       return;
     }
 
@@ -255,6 +252,29 @@ const gameController = (() => {
     if (player1 && player2) {
       document.querySelector(".button--start").disabled = false;
     }
+  };
+
+  const continueGame = async () => {
+    const winnerDialog = document.querySelector(".winner__dialog");
+    winnerDialog.close();
+    gameActive = true;
+    gameboard.init();
+    switchPlayer();
+    displayPlayerSymbol();
+    while (gameActive) {
+      await playRound();
+    }
+    if (player1 && player2) {
+      document.querySelector(".button--start").disabled = false;
+    }
+  };
+
+  const endGame = () => {
+    const winnerDialog = document.querySelector(".winner__dialog");
+    winnerDialog.close();
+    gameActive = false;
+    gameboard.init();
+    document.querySelector(".button--start").disabled = false;
   };
 
   return { startGame };
